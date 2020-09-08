@@ -1,0 +1,15 @@
+version: '3.7'
+services:
+  selenium:
+    image: "selenium/standalone-opera"
+  server:
+    build:
+      context: ./server
+    restart: always
+    extra_hosts:
+      - "owner:172.17.0.1"
+    ports:
+      - 3000:3000
+    depends_on:
+      - selenium
+
