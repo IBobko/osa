@@ -24,6 +24,14 @@ def stack():
     name = spconfig.create_idp_stack(version)
     return 'Stack Name: {}'.format(name)
 
+@app.route('/update-platform')
+def stack():
+    spconfig = SPConfig()
+    version = spconfig.get_version_form_spboard()
+    spconfig.auth_spconfig()
+    name = spconfig.create_idp_stack(version)
+    return 'Stack Name: {}'.format(name)
+
 
 
 # listen
