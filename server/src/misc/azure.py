@@ -1,7 +1,9 @@
+import json
+
 data = [
   {
     "name": "APP_NAME",
-    "value": "bi-irs-imc",
+    "value": "imc-dev-736-mwe1-globus-irs-appservice",
     "slotSetting": False
   },
   {
@@ -31,7 +33,7 @@ data = [
   },
   {
     "name": "DATALAKE_HOST",
-    "value": "bidatalakeimc.azuredatalakestore.net",
+    "value": "imcdev736mwe1globusdls.azuredatalakestore.net",
     "slotSetting": False
   },
   {
@@ -51,7 +53,7 @@ data = [
   },
   {
     "name": "RUMS_MONITOR_URL",
-    "value": "https://prod-56.westeurope.logic.azure.com:443/workflows/359030c61e7d4b6199cb6bbf47f79ce7/triggers/manual/paths/invoke?api-version=2016-10-01&sp=/triggers/manual/run&sv=1.0&sig=bjUxgut05KdY2bcVnUXmoWaO9a2UmXtVyQa7Fpyne1w",
+    "value": "",
     "slotSetting": False
   },
   {
@@ -96,12 +98,12 @@ data = [
   },
   {
     "name": "SQL_HOST",
-    "value": "bi-sql-imc.database.windows.net",
+    "value": "imc-dev-736-mwe1-astrum-azuresql.database.windows.net",
     "slotSetting": False
   },
   {
     "name": "SQL_PASSWORD",
-    "value": "1q@w3e4r5t6Y",
+    "value": "_ce1718518b0612a2f522afdeeb6641ea091973d4a712c1c7",
     "slotSetting": False
   },
   {
@@ -111,7 +113,7 @@ data = [
   },
   {
     "name": "STAGE",
-    "value": "master-dev",
+    "value": "dev",
     "slotSetting": False
   },
   {
@@ -123,14 +125,34 @@ data = [
     "name": "TENANT_DATALAKE",
     "value": "b44641f9-e36e-4d7f-a3c4-eb3b991b6120",
     "slotSetting": False
-  },
-  {
-    "name": "WEBSITE_HTTPLOGGING_RETENTION_DAYS",
-    "value": "3",
-    "slotSetting": False
   }
 ]
 
-if __name__ == '__main__':
+
+def export_for_bash():
     for row in data:
-        print("export {}=\"{}\"".format(row['name'],row['value']))
+        print("export {}=\"{}\"".format(row['name'], row['value']))
+
+
+def export_for_docker():
+    for row in data:
+        if row['name'] in ('SQL_HOST','SQL_DB','SQL_USER','SQL_PASSWORD','CLIENT_ID_DATALAKE',
+                           'CLIENT_SECRET_DATALAKE','TENANT_DATALAKE','DATALAKE_HOST'):
+            print("ENV {}=\"{}\"".format(row['name'], row['value']))
+
+
+def export_to_azure():
+    result = []
+    for row in data:
+        if row['name'] in ('SQL_HOST','SQL_DB','SQL_USER','SQL_PASSWORD','CLIENT_ID_DATALAKE',
+                           'CLIENT_SECRET_DATALAKE','TENANT_DATALAKE','DATALAKE_HOST'):
+            result.append(row)
+    print(json.dumps(result, indent=4))
+
+
+if __name__ == '__main__':
+    export_for_bash()
+    print("--------------------------------")
+    export_for_docker()
+    print("--------------------------------")
+    export_to_azure()
